@@ -82,14 +82,15 @@ function afterConnection() {
 
 
         .then(function (answer) {
-          console.log(answer);
+          // console.log(answer);
           // find out how many items we have of particular item_id
-          connection.query("SELECT stock_quantity FROM products where item_id=?", [answer.choice], function (err, res) {
-            console.log(res[0].stock_quantity);
-            console.log(answer.quantity);
+          connection.query("SELECT stock_quantity, product_name, price FROM products where item_id=?", [answer.choice], function (err, res) {
+            console.log("You have asked for: " + answer.quantity +" " + res[0].product_name);
+            console.log("Cost per unit: " + "$" + res[0].price);
+            // console.log(res[0].stock_quantity);
             if (answer.quantity <= res[0].stock_quantity) {
               //update db, let user know and start over
-              console.log("we have enough");
+              console.log("We have enough! your total cost is: " + (answer.quantity*res[0].price));
               var newStock = res[0].stock_quantity - answer.quantity;
               var userChoice = answer.choice;
               // console.log(newStock);
